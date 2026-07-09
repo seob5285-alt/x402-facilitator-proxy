@@ -1,0 +1,58 @@
+{
+  "name": "x402-facilitator-proxy",
+  "version": "1.0.0",
+  "description": "Multi-tenant payment gateway for API monetization with autonomous agent settlement on Base L2. Implements HTTP 402 protocol with USDC micropayments and programmatic fee routing.",
+  "keywords": [
+    "awesome-list",
+    "x402-protocol",
+    "ai-agent-payments",
+    "micropayments",
+    "stablecoin-rail",
+    "api-monetization",
+    "pay-per-request",
+    "solana-x402",
+    "mcp-servers",
+    "blockchain-signals",
+    "automated-billing",
+    "kgr-seo-hub",
+    "base-l2",
+    "usdc-payments",
+    "cloudflare-workers",
+    "http-402",
+    "autonomous-agents",
+    "langchain",
+    "crewai",
+    "ethereum",
+    "web3",
+    "defi"
+  ],
+  "author": "X402 Protocol Contributors",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-username/x402-facilitator-proxy.git"
+  },
+  "homepage": "https://github.com/your-username/x402-facilitator-proxy#readme",
+  "bugs": {
+    "url": "https://github.com/your-username/x402-facilitator-proxy/issues"
+  },
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy --minify",
+    "cf-typegen": "wrangler types --env-interface CloudflareBindings",
+    "sweep": "tsx -r dotenv/config src/backend/automation/sweeper.ts",
+    "mcp:start": "cd x402-client-sdk && npm run mcp:start"
+  },
+  "dependencies": {
+    "ethers": "^6.17.0",
+    "hono": "^4.12.27",
+    "viem": "^2.54.3"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20260702.1",
+    "dotenv": "^17.4.2",
+    "tsx": "^4.23.0",
+    "wrangler": "^4.4.0"
+  }
+}

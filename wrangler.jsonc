@@ -1,0 +1,51 @@
+{
+	"$schema": "node_modules/wrangler/config-schema.json",
+	"name": "x402-facilitator-proxy",
+	"main": "src/index.ts",
+	"compatibility_date": "2026-07-05",
+	"kv_namespaces": [
+		{
+			"binding": "X402_NONCES",
+			"id": "c89e51e44f5e45719f3fe3da4bbbffe9"
+		},
+		{
+			"binding": "COMPLIANCE_KV",
+			"id": "520e54b8af5147b0b1ab64de0a9140be"
+		}
+	],
+	"triggers": {
+		"crons": ["0 0 * * *"]
+	}
+	// "compatibility_flags": [
+	//   "nodejs_compat"
+	// ],
+	// "vars": {
+	//   "MY_VAR": "my-variable"
+	// },
+	// "kv_namespaces": [
+	//   {
+	//     "binding": "MY_KV_NAMESPACE",
+	//     "id": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+	//   }
+	// ],
+	// "r2_buckets": [
+	//   {
+	//     "binding": "MY_BUCKET",
+	//     "bucket_name": "my-bucket"
+	//   }
+	// ],
+	// "d1_databases": [
+	//   {
+	//     "binding": "MY_DB",
+	//     "database_name": "my-database",
+	//     "database_id": ""
+	//   }
+	// ],
+	// "ai": {
+	//   "binding": "AI"
+	// },
+	// "observability": {
+	//   "enabled": true,
+	//   "head_sampling_rate": 1
+	// }
+}

@@ -1,0 +1,55 @@
+{
+  "name": "@x402/client-sdk",
+  "version": "1.0.0",
+  "description": "TypeScript SDK for X402 payment protocol with Model Context Protocol (MCP) server support for autonomous AI agents",
+  "keywords": [
+    "awesome-list",
+    "x402-protocol",
+    "ai-agent-payments",
+    "mcp-servers",
+    "micropayments",
+    "stablecoin-rail",
+    "api-monetization",
+    "automated-billing",
+    "blockchain-signals",
+    "base-l2",
+    "usdc-payments",
+    "autonomous-agents",
+    "langchain",
+    "crewai",
+    "ethereum",
+    "web3",
+    "typescript-sdk",
+    "payment-gateway",
+    "http-402"
+  ],
+  "author": "X402 Protocol Contributors",
+  "license": "MIT",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "prepublishOnly": "npm run build",
+    "mcp:start": "tsx src/mcp-server.ts",
+    "dev": "tsc --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-username/x402-facilitator-proxy.git",
+    "directory": "x402-client-sdk"
+  },
+  "homepage": "https://github.com/your-username/x402-facilitator-proxy/tree/main/x402-client-sdk#readme",
+  "bugs": {
+    "url": "https://github.com/your-username/x402-facilitator-proxy/issues"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.29.0",
+    "ethers": "^6.0.0",
+    "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "tsx": "^4.23.0",
+    "typescript": "^5.0.0",
+    "@types/node": "^20.0.0"
+  }
+}

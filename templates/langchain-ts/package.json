@@ -1,0 +1,57 @@
+{
+  "name": "x402-langchain-agent-template",
+  "version": "1.0.0",
+  "description": "LangChain TypeScript agent template for autonomous X402 payment processing on Base L2 with USDC micropayments",
+  "keywords": [
+    "awesome-list",
+    "x402-protocol",
+    "ai-agent-payments",
+    "micropayments",
+    "stablecoin-rail",
+    "api-monetization",
+    "pay-per-request",
+    "mcp-servers",
+    "blockchain-signals",
+    "automated-billing",
+    "langchain",
+    "typescript",
+    "autonomous-agents",
+    "base-l2",
+    "usdc-payments",
+    "ethereum",
+    "web3",
+    "http-402",
+    "agent-template"
+  ],
+  "author": "X402 Protocol Contributors",
+  "license": "MIT",
+  "type": "module",
+  "main": "agent.ts",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-username/x402-facilitator-proxy.git",
+    "directory": "templates/langchain-ts"
+  },
+  "homepage": "https://github.com/your-username/x402-facilitator-proxy/tree/main/templates/langchain-ts#readme",
+  "bugs": {
+    "url": "https://github.com/your-username/x402-facilitator-proxy/issues"
+  },
+  "scripts": {
+    "dev": "tsx agent.ts",
+    "build": "tsc",
+    "start": "node dist/agent.js",
+    "install-deps": "npm install"
+  },
+  "dependencies": {
+    "@langchain/core": "^0.1.0",
+    "@langchain/openai": "^0.0.14",
+    "langchain": "^0.1.0",
+    "ethers": "^6.17.0",
+    "zod": "^3.22.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "tsx": "^4.23.0",
+    "typescript": "^5.0.0"
+  }
+}
