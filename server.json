@@ -6,13 +6,16 @@
   "version": "1.0.0",
   "license": "MIT",
   "repository": {
-    "type": "github",
+    "source": "github",
     "url": "https://github.com/seob5285-alt/x402-facilitator-proxy"
   },
   "packages": [
     {
       "registryType": "npm",
-      "identifier": "x402-facilitator-proxy"
+      "identifier": "x402-facilitator-proxy",
+      "transport": {
+        "type": "stdio"
+      }
     }
   ]
 }
