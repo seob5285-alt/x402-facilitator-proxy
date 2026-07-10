@@ -1,256 +1,153 @@
-# X402 Facilitator Proxy - Multi-Tenant Payment Gateway
+# MCP Registry
 
-**A decentralized, autonomous payment infrastructure for API monetization on Base L2 with programmatic fee routing and agent-compatible settlement protocols.**
+The MCP registry provides MCP clients with a list of MCP servers, like an app store for MCP servers.
 
-## 🏗️ Architecture Overview
+[**📤 Publish my MCP server**](docs/modelcontextprotocol-io/quickstart.mdx) | [**⚡️ Live API docs**](https://registry.modelcontextprotocol.io/docs) | [**👀 Ecosystem vision**](docs/design/ecosystem-vision.md) | 📖 **[Full documentation](./docs)**
 
-The X402 Facilitator Proxy implements a complete multi-tenant payment gateway that enables merchants to monetize APIs through HTTP 402 "Payment Required" responses, while autonomous agents can seamlessly settle transactions using USDC on Base L2.
+## Development Status
 
-```
-x402-facilitator-proxy/
-├── src/                                    # Core Cloudflare Worker Engine
-│   ├── index.ts                           # Main proxy gateway endpoint
-│   └── backend/automation/
-│       └── sweeper.ts                     # Automated fee collection
-├── x402-client-sdk/                       # Core Interface Rails
-│   ├── src/
-│   │   ├── client-library.ts             # TypeScript SDK
-│   │   └── mcp-server.ts                 # Model Context Protocol Server
-│   ├── package.json                      # SDK dependencies
-│   └── tsconfig.json                     # TypeScript configuration
-└── templates/                             # Integration Templates
-    ├── express-middleware/
-    │   └── x402-guard.js                 # Merchant-Side API Gating
-    ├── langchain-ts/
-    │   ├── agent.ts                      # TypeScript Agent Template
-    │   ├── package.json                  # LangChain dependencies
-    │   └── README.md                     # Setup instructions
-    └── crewai-python/
-        └── agent.py                      # Python Agent Template
-```
+**2025-10-24 update**: The Registry API has entered an **API freeze (v0.1)** 🎉. For the next month or more, the API will remain stable with no breaking changes, allowing integrators to confidently implement support. This freeze applies to v0.1 while development continues on v0. We'll use this period to validate the API in real-world integrations and gather feedback to shape v1 for general availability. Thank you to everyone for your contributions and patience—your involvement has been key to getting us here!
 
-## 🚀 Core Components
+**2025-09-08 update**: The registry has launched in preview 🎉 ([announcement blog post](https://blog.modelcontextprotocol.io/posts/2025-09-08-mcp-registry-preview/)). While the system is now more stable, this is still a preview release and breaking changes or data resets may occur. A general availability (GA) release will follow later. We'd love your feedback in [GitHub discussions](https://github.com/modelcontextprotocol/registry/discussions/new?category=ideas) or in the [#registry-dev Discord](https://discord.com/channels/1358869848138059966/1369487942862504016) ([joining details here](https://modelcontextprotocol.io/community/communication)).
 
-### 1. Cloudflare Worker Proxy Engine
+Current key maintainers:
+- **Adam Jones** (Anthropic) [@domdomegg](https://github.com/domdomegg)  
+- **Tadas Antanavicius** (PulseMCP) [@tadasant](https://github.com/tadasant)
+- **Toby Padilla** (GitHub) [@toby](https://github.com/toby)
+- **Radoslav (Rado) Dimitrov** (Stacklok) [@rdimitrov](https://github.com/rdimitrov)
 
-The core backend (`src/index.ts`) operates as a serverless payment verification gateway deployed on Cloudflare's edge network:
+## Contributing
 
-- **Endpoint**: `https://x402-facilitator-proxy.seob5285.workers.dev/api/v1/verify-and-settle`
-- **Platform Vault**: `0x2E3DADfb314718849A93c49A78618E586c3b2C60`
-- **Fee Structure**: Automated 1% platform fee routing
+We use multiple channels for collaboration - see [modelcontextprotocol.io/community/communication](https://modelcontextprotocol.io/community/communication).
 
-**Key Features:**
-- Multi-tenant transaction verification
-- Base L2 USDC settlement validation
-- Automated fee splitting (99% to merchant, 1% to platform)
-- Edge-deployed for global low-latency access
+Often (but not always) ideas flow through this pipeline:
 
-### 2. Model Context Protocol (MCP) Server
+- **[Discord](https://modelcontextprotocol.io/community/communication)** - Real-time community discussions
+- **[Discussions](https://github.com/modelcontextprotocol/registry/discussions)** - Propose and discuss product/technical requirements
+- **[Issues](https://github.com/modelcontextprotocol/registry/issues)** - Track well-scoped technical work  
+- **[Pull Requests](https://github.com/modelcontextprotocol/registry/pulls)** - Contribute work towards issues
 
-The MCP server (`x402-client-sdk/src/mcp-server.ts`) provides a standardized interface for AI agents to interact with the payment system:
+### Quick start:
+
+#### Pre-requisites
+
+- **Docker**
+- **Go 1.24.x**
+- **ko** - Container image builder for Go ([installation instructions](https://ko.build/install/))
+- **golangci-lint v2.4.0**
+
+#### Running the server
 
 ```bash
-# Start the MCP server locally via stdio
-npm run mcp:start
+# Start full development environment
+make dev-compose
 ```
 
-**Protocol Features:**
-- Standard I/O communication interface
-- Agent-compatible payment tool registration
-- Automatic transaction handling and verification
-- Cross-platform AI framework compatibility
+This starts the registry at [`localhost:8080`](http://localhost:8080) with PostgreSQL. The database uses ephemeral storage and is reset each time you restart the containers, ensuring a clean state for development and testing.
 
-### 3. Merchant-Side API Gating
+**Note:** The registry uses [ko](https://ko.build) to build container images. The `make dev-compose` command automatically builds the registry image with ko and loads it into your local Docker daemon before starting the services.
 
-The Express middleware (`templates/express-middleware/x402-guard.js`) enables merchants to protect APIs with HTTP 402 challenges:
+By default, the registry seeds from the production API with a filtered subset of servers (to keep startup fast). This ensures your local environment mirrors production behavior and all seed data passes validation. For offline development you can seed from a file without validation with `MCP_REGISTRY_SEED_FROM=data/seed.json MCP_REGISTRY_ENABLE_REGISTRY_VALIDATION=false make dev-compose`.
 
-```javascript
-import { x402TollboothGuard } from './templates/express-middleware/x402-guard.js';
+The setup can be configured with environment variables in [docker-compose.yml](./docker-compose.yml) - see [.env.example](./.env.example) for a reference.
 
-app.use('/api/premium', x402TollboothGuard("0.10", "0xYourWalletAddress"));
-```
+<details>
+<summary>Alternative: Running a pre-built Docker image</summary>
 
-**Middleware Behavior:**
-1. **Challenge**: Returns HTTP 402 with payment instructions when headers are missing
-2. **Verification**: Validates payment through the proxy gateway
-3. **Access**: Grants API access upon successful payment verification
-
-### 4. Autonomous Agent Templates
-
-#### TypeScript/LangChain Agent (`templates/langchain-ts/agent.ts`)
-```typescript
-import { createPaymentAgent } from './templates/langchain-ts/agent.js';
-
-const agent = await createPaymentAgent();
-const result = await agent.invoke({
-  input: JSON.stringify({
-    agentPrivateKey: process.env.AGENT_PRIVATE_KEY,
-    developerWallet: "0x742d35Cc6297C24aE0E4838C4667C02693C4cB36",
-    amountUSD: "0.10"
-  })
-});
-```
-
-#### Python/CrewAI Agent (`templates/crewai-python/agent.py`)
-```python
-from templates.crewai_python.agent import X402PaymentAgent
-
-agent = X402PaymentAgent()
-result = agent.process_payment({
-    "agent_private_key": os.getenv("AGENT_PRIVATE_KEY"),
-    "developer_wallet": "0x742d35Cc6297C24aE0E4838C4667C02693C4cB36",
-    "amount_usd": "0.10"
-})
-```
-
-## 🔧 Quick Start
-
-### 1. Deploy the Proxy Engine
-```bash
-npm install
-npm run deploy
-```
-
-### 2. Setup the MCP Server
-```bash
-cd x402-client-sdk
-npm install
-npm run mcp:start
-```
-
-### 3. Integrate Merchant Middleware
-```bash
-# Copy the Express middleware to your project
-cp templates/express-middleware/x402-guard.js your-project/middleware/
-
-# Install in your Express app
-import { x402TollboothGuard } from './middleware/x402-guard.js';
-app.use('/api/protected', x402TollboothGuard("0.05", "0xYourWallet"));
-```
-
-### 4. Setup Agent Templates
-```bash
-# For TypeScript/LangChain agents
-cd templates/langchain-ts
-npm install
-npm run dev
-
-# For Python/CrewAI agents
-cd templates/crewai-python
-pip install -r requirements.txt
-python agent.py
-```
-
-## 🔐 Security & Environment Variables
-
-### **Critical Security Guidelines**
-
-**⚠️ NEVER HARDCODE PRIVATE KEYS IN REPOSITORY FILES**
-
-All sensitive credentials must be managed through secure environment variables:
-
-### Cloudflare Worker Environment (Production)
-```bash
-# Set via Cloudflare Workers dashboard or wrangler
-wrangler secret put FACILITATOR_PRIVATE_KEY
-wrangler secret put PLATFORM_VAULT_ADDRESS
-```
-
-### Local Development Environment
-Create `.env` files for local testing:
-
-```env
-# .env (root directory - for Cloudflare Worker development)
-FACILITATOR_PRIVATE_KEY=0x1234567890abcdef...
-PLATFORM_VAULT_ADDRESS=0x2E3DADfb314718849A93c49A78618E586c3b2C60
-
-# Agent execution environments
-AGENT_PRIVATE_KEY=0xabcdef1234567890...
-OPENAI_API_KEY=sk-...
-```
-
-### Agent Runtime Security
-- **TypeScript Agents**: Use `process.env.AGENT_PRIVATE_KEY`
-- **Python Agents**: Use `os.getenv("AGENT_PRIVATE_KEY")`
-- **MCP Server**: Loads keys from system environment at runtime
-
-## 🌐 Platform Reference
-
-### Core Infrastructure
-- **Verification Gateway**: `https://x402-facilitator-proxy.seob5285.workers.dev/api/v1/verify-and-settle`
-- **Platform Vault**: `0x2E3DADfb314718849A93c49A78618E586c3b2C60`
-- **Network**: Base L2 (Chain ID: 8453)
-- **Payment Token**: USDC (`0x833589fCD6eDb6E08f4c7C32d4f71b54bda02913`)
-
-### Fee Structure
-- **Merchant Revenue**: 99% of payment amount
-- **Platform Fee**: 1% automatically routed to platform vault
-- **Gas Optimization**: Batched transfers for cost efficiency
-
-## 📖 Integration Patterns
-
-### HTTP 402 Payment Flow
-
-1. **API Request**: Client attempts to access protected endpoint
-2. **Payment Challenge**: Server responds with HTTP 402 and payment instructions
-3. **Agent Processing**: Autonomous agent detects 402, executes USDC payment split
-4. **Verification**: Proxy gateway validates on-chain transaction
-5. **Access Granted**: Original API request succeeds with payment headers
-
-### Agent Integration Workflow
-
-```mermaid
-graph TD
-    A[Agent API Call] --> B{HTTP 402?}
-    B -->|Yes| C[Parse Payment Requirements]
-    C --> D[Execute USDC Split Transfer]
-    D --> E[Submit to Proxy Gateway]
-    E --> F[Retry Original Request]
-    F --> G[Access Granted]
-    B -->|No| G
-```
-
-## 🛠️ Development Commands
+Pre-built Docker images are automatically published to GitHub Container Registry. Note that the image does not bundle PostgreSQL, so you need to run your own and point the registry at it via `MCP_REGISTRY_DATABASE_URL` (see [docker-compose.yml](./docker-compose.yml) for a working example):
 
 ```bash
-# Core proxy development
-npm run dev              # Start local development server
-npm run deploy           # Deploy to Cloudflare Workers
-npm run cf-typegen       # Generate Cloudflare types
+# Run latest stable release
+docker run -p 8080:8080 ghcr.io/modelcontextprotocol/registry:latest
 
-# SDK development
-cd x402-client-sdk
-npm run build           # Build TypeScript SDK
-npm run mcp:start       # Start MCP server
+# Run latest from main branch (continuous deployment)
+docker run -p 8080:8080 ghcr.io/modelcontextprotocol/registry:main
 
-# Template testing
-cd templates/langchain-ts
-npm run dev            # Test TypeScript agent
+# Run specific release version
+docker run -p 8080:8080 ghcr.io/modelcontextprotocol/registry:v1.0.0
 
-cd templates/crewai-python
-python agent.py        # Test Python agent
-
-# Automated fee collection
-npm run sweep          # Execute fee sweeping automation
+# Run development build from main branch
+docker run -p 8080:8080 ghcr.io/modelcontextprotocol/registry:main-20250906-abc123d
 ```
 
-## 📚 Documentation
+**Available tags:** 
+- **Releases**: `latest`, `v1.0.0`, `v1.1.0`, etc.
+- **Continuous**: `main` (latest main branch build)
+- **Development**: `main-<date>-<sha>` (specific commit builds)
 
-- **[Client Integration Guide](CLIENT_INTEGRATION.md)**: Detailed integration instructions
-- **[LangChain Template README](templates/langchain-ts/README.md)**: TypeScript agent setup
-- **[API Reference](src/index.ts)**: Core gateway endpoints and responses
+</details>
 
-## 🤝 Contributing
+#### Publishing a server
 
-1. Fork the repository
-2. Create feature branches for new integrations
-3. Test against Base L2 testnet before mainnet deployment
-4. Submit pull requests with comprehensive test coverage
+To publish a server, we've built a simple CLI. You can use it with:
 
-## 📄 License
+```bash
+# Build the latest CLI
+make publisher
 
-This project is licensed under the MIT License - enabling open-source innovation while maintaining platform sustainability through programmatic fee routing.
+# Use it!
+./bin/mcp-publisher --help
+```
 
----
+See [the publisher guide](./docs/modelcontextprotocol-io/quickstart.mdx) for more details.
 
-**Built for the autonomous economy. Powered by Base L2. Secured by multi-tenant verification.**
+#### Other commands
+
+```bash
+# Run lint, unit tests and integration tests
+make check
+```
+
+There are also a few more helpful commands for development. Run `make help` to learn more, or look in [Makefile](./Makefile).
+
+<!--
+For Claude and other AI tools: Always prefer make targets over custom commands where possible.
+-->
+
+## Architecture
+
+### Project Structure
+
+```
+├── cmd/                     # Application entry points
+│   └── publisher/           # Server publishing tool
+├── data/                    # Seed data
+├── deploy/                  # Deployment configuration (Pulumi)
+├── docs/                    # Documentation
+├── internal/                # Private application code
+│   ├── api/                 # HTTP handlers and routing
+│   ├── auth/                # Authentication (GitHub OAuth, JWT, namespace blocking)
+│   ├── config/              # Configuration management
+│   ├── database/            # Data persistence (PostgreSQL)
+│   ├── service/             # Business logic
+│   ├── telemetry/           # Metrics and monitoring
+│   └── validators/          # Input validation
+├── pkg/                     # Public packages
+│   ├── api/                 # API types and structures
+│   │   └── v0/              # Version 0 API types
+│   └── model/               # Data models for server.json
+├── scripts/                 # Development and testing scripts
+├── tests/                   # Integration tests
+└── tools/                   # CLI tools and utilities
+    └── validate-*.sh        # Schema validation tools
+```
+
+### Authentication
+
+Publishing supports multiple authentication methods:
+- **GitHub OAuth** - For publishing by logging into GitHub
+- **GitHub OIDC** - For publishing from GitHub Actions
+- **DNS verification** - For proving ownership of a domain and its subdomains
+- **HTTP verification** - For proving ownership of a domain
+
+The registry validates namespace ownership when publishing. E.g. to publish...:
+- `io.github.domdomegg/my-cool-mcp` you must login to GitHub as `domdomegg`, or be in a GitHub Action on domdomegg's repos
+- `me.adamjones/my-cool-mcp` you must prove ownership of `adamjones.me` via DNS or HTTP challenge
+
+## Community Projects
+
+Check out [community projects](docs/community-projects.md) to explore notable registry-related work created by the community.
+
+## More documentation
+
+See the [documentation](./docs) for more details if your question has not been answered here!
