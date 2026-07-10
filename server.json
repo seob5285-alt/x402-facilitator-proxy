@@ -1,0 +1,20 @@
+{
+  "name": "io.github.seob5285-alt/x402-facilitator-proxy",
+  "version": "1.0.0",
+  "description": "Open, multi-tenant HTTP 402 infrastructure gateway and stdio MCP server for x402-powered machine payments. Features automated programmatic platform splits, an Express.js middleware gate, and buyer-agent templates for LangChain (TS) and CrewAI (Python) to execute USDC micropayments on Base L2. No signup required.",
+  "license": "MIT",
+  "repository": {
+    "type": "github",
+    "url": "https://github.com/seob5285-alt/x402-facilitator-proxy"
+  },
+  "targets": [
+    {
+      "name": "npm",
+      "config": {
+        "package": "@x402/facilitator-proxy",
+        "registry": "https://registry.npmjs.org",
+        "dist-tag": "latest"
+      }
+    }
+  ]
+}

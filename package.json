@@ -1,5 +1,6 @@
 {
-  "name": "x402-facilitator-proxy",
+  "name": "@x402/facilitator-proxy",
+  "mcpName": "io.github.seob5285-alt/x402-facilitator-proxy",
   "version": "1.0.0",
   "description": "Multi-tenant payment gateway for API monetization with autonomous agent settlement on Base L2. Implements HTTP 402 protocol with USDC micropayments and programmatic fee routing.",
   "keywords": [
@@ -37,6 +38,9 @@
     "url": "https://github.com/your-username/x402-facilitator-proxy/issues"
   },
   "type": "module",
+  "bin": {
+    "x402-facilitator-proxy": "./dist/index.js"
+  },
   "scripts": {
     "dev": "wrangler dev",
     "deploy": "wrangler deploy --minify",
