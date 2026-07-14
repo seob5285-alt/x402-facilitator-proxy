@@ -1,7 +1,7 @@
 {
   "name": "x402-facilitator-proxy",
   "mcpName": "io.github.seob5285-alt/x402-facilitator-proxy",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Multi-tenant payment gateway for API monetization with autonomous agent settlement on Base L2. Implements HTTP 402 protocol with USDC micropayments and programmatic fee routing.",
   "keywords": [
     "awesome-list",
@@ -31,11 +31,11 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/your-username/x402-facilitator-proxy.git"
+    "url": "https://github.com/seob5285-alt/x402-facilitator-proxy.git"
   },
-  "homepage": "https://github.com/your-username/x402-facilitator-proxy#readme",
+  "homepage": "https://github.com/seob5285-alt/x402-facilitator-proxy#readme",
   "bugs": {
-    "url": "https://github.com/your-username/x402-facilitator-proxy/issues"
+    "url": "https://github.com/seob5285-alt/x402-facilitator-proxy/issues"
   },
   "type": "module",
   "bin": {
