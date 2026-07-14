@@ -3,7 +3,7 @@
   "name": "io.github.seob5285-alt/x402-facilitator-proxy",
   "title": "x402 Facilitator Proxy",
   "description": "Multi-tenant HTTP 402 infrastructure gateway and stdio MCP server for machine payments.",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "license": "MIT",
   "repository": {
     "source": "github",
@@ -13,7 +13,7 @@
     {
       "registryType": "npm",
       "identifier": "x402-facilitator-proxy",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "transport": {
         "type": "stdio"
       }
