@@ -1,7 +1,7 @@
 {
   "name": "x402-facilitator-proxy",
   "mcpName": "io.github.seob5285-alt/x402-facilitator-proxy",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Multi-tenant payment gateway for API monetization with autonomous agent settlement on Base L2. Implements HTTP 402 protocol with USDC micropayments and programmatic fee routing.",
   "keywords": [
     "awesome-list",
@@ -51,7 +51,8 @@
   "dependencies": {
     "ethers": "^6.17.0",
     "hono": "^4.12.27",
-    "viem": "^2.54.3"
+    "viem": "^2.54.3",
+    "x402-facilitator-proxy": "^1.0.1"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20260702.1",
