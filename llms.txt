@@ -1,0 +1,79 @@
+# x402-facilitator-proxy
+
+> Secure, multi-tenant isolated API routing gateway and edge-optimized MCP server for autonomous AI agent commerce.
+
+## Core Overview
+The [`x402-facilitator-proxy`](.) is a high-performance Model Context Protocol (MCP) server that enables autonomous AI agents to programmatically route, handle, and execute micro-payments and fee-split settlement architectures under the x402 specification without data leakage.
+
+## Installation & Setup
+To install the proxy server globally or add it as a project dependency:
+```bash
+npm install @seob5285-alt/x402-facilitator-proxy
+```
+
+## Architecture Components
+
+### 1. Cloudflare Worker Gateway ([`src/index.ts`](src/index.ts))
+- **Endpoint**: `https://x402-facilitator-proxy.seob5285.workers.dev/api/v1/verify-and-settle`
+- **Platform Vault**: [`0x2E3DADfb314718849A93c49A78618E586c3b2C60`](src/index.ts:47)
+- **Base L2 USDC Contract**: [`0x833589fCD6eDb6E08f4c7C32D4f71b54bda02913`](src/index.ts:50)
+- Edge-deployed payment verification gateway with automatic 1% platform fee routing
+- Multi-tenant transaction verification with Base L2 USDC settlement validation
+- RPC failover system across multiple Base L2 endpoints
+
+### 2. Model Context Protocol Server ([`x402-client-sdk/src/mcp-server.ts`](x402-client-sdk/src/mcp-server.ts))
+- Standard I/O MCP server for AI agent integration
+- Tool: [`route_x402_payment`](x402-client-sdk/src/mcp-server.ts:23) - Executes automatic 1% split payments on Base L2
+- Agent-compatible payment tool registration with cross-platform AI framework compatibility
+- Direct Base L2 provider connection for settlement verification
+
+### 3. Merchant API Protection ([`templates/express-middleware/x402-guard.js`](templates/express-middleware/x402-guard.js))
+- Express middleware for HTTP 402 "Payment Required" challenges
+- Function: [`x402TollboothGuard(amount, walletAddress)`](templates/express-middleware/x402-guard.js) 
+- Validates payments through proxy gateway before granting API access
+
+### 4. Autonomous Agent Templates
+
+#### TypeScript/LangChain ([`templates/langchain-ts/agent.ts`](templates/langchain-ts/agent.ts))
+- Function: [`createPaymentAgent()`](templates/langchain-ts/agent.ts) - LangChain-compatible payment agent
+- Handles agent private key, developer wallet, and USD amount parameters
+
+#### Python/CrewAI ([`templates/crewai-python/agent.py`](templates/crewai-python/agent.py))
+- Class: [`X402PaymentAgent`](templates/crewai-python/agent.py) - CrewAI-compatible payment processor
+- Integrates with Python-based autonomous agent frameworks
+
+### 5. Client SDK ([`x402-client-sdk/src/index.ts`](x402-client-sdk/src/index.ts))
+- TypeScript SDK for direct integration without MCP protocol
+- Payment routing and verification utilities
+- Base L2 transaction handling and settlement verification
+
+## Key Features
+- **Multi-tenant Architecture**: Isolated payment processing per merchant
+- **Automated Fee Splitting**: 99% to merchant, 1% to platform vault
+- **Edge Optimization**: Global Cloudflare Workers deployment for low latency
+- **Blockchain Settlement**: USDC transactions on Base L2 for cost efficiency
+- **Agent Compatibility**: MCP server protocol for seamless AI agent integration
+- **HTTP 402 Protocol**: Standard payment-required responses for API monetization
+- **Template Ecosystem**: Ready-to-use integrations for popular AI frameworks
+
+## Configuration Files
+- [`package.json`](package.json) - Main project configuration and dependencies
+- [`server.json`](server.json) - MCP server configuration
+- [`wrangler.jsonc`](wrangler.jsonc) - Cloudflare Workers deployment config
+- [`.env.example`](.env.example) - Environment variables template
+
+## Development Scripts
+- `npm run dev` - Local Cloudflare Workers development server
+- `npm run deploy` - Deploy to Cloudflare Workers with minification
+- `npm run mcp:start` - Start MCP server locally via stdio
+- `npm run sweep` - Run automated fee collection via [`src/backend/automation/sweeper.ts`](src/backend/automation/sweeper.ts)
+
+## Usage Example
+```javascript
+import { x402TollboothGuard } from './templates/express-middleware/x402-guard.js';
+
+// Protect API endpoints with $0.10 payment requirement
+app.use('/api/premium', x402TollboothGuard("0.10", "0xYourWalletAddress"));
+```
+
+The x402-facilitator-proxy enables developers to monetize APIs through micropayments while allowing autonomous AI agents to seamlessly settle transactions, creating a new paradigm for AI agent commerce and API monetization.
